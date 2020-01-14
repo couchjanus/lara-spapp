@@ -34,6 +34,9 @@ import Home from './views/Home'
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import UsersList from './views/components/UsersList';
+import PostsList from './views/components/PostsList';
+
 const router = new VueRouter({
     mode: 'history',
     routes: [
@@ -46,6 +49,18 @@ const router = new VueRouter({
             path: '/hello',
             name: 'hello',
             component: Hello,
+        },
+        ,
+        {
+            path: '/posts',
+            name: 'posts.index',
+            component: PostsList,
+        },
+        ,
+        {
+            path: '/users',
+            name: 'users.index',
+            component: UsersList,
         },
     ],
 });
