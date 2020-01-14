@@ -8,12 +8,11 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import VueRouter from 'vue-router'
+import router from './routes.js'
 
 Vue.use(VueRouter)
 
 import App from './views/App'
-import Hello from './views/Hello'
-import Home from './views/Home'
 
 /**
  * The following block of code may be used to automatically register your
@@ -33,37 +32,6 @@ import Home from './views/Home'
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-import UsersList from './views/components/UsersList';
-import PostsList from './views/components/PostsList';
-
-const router = new VueRouter({
-    mode: 'history',
-    routes: [
-        {
-            path: '/',
-            name: 'home',
-            component: Home
-        },
-        {
-            path: '/hello',
-            name: 'hello',
-            component: Hello,
-        },
-        ,
-        {
-            path: '/posts',
-            name: 'posts.index',
-            component: PostsList,
-        },
-        ,
-        {
-            path: '/users',
-            name: 'users.index',
-            component: UsersList,
-        },
-    ],
-});
 
 const app = new Vue({
     el: '#app',
