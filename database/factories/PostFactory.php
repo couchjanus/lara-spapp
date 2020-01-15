@@ -8,7 +8,9 @@ use Faker\Generator as Faker;
 $factory->define(Post::class, function (Faker $faker) {
     return [
         'title' => $faker->sentence(),
+        'category' => $faker->word(),
         'content' => $faker->paragraph(20),
-        'votes' => $faker->randomDigit(),
+        'imgname' => $faker->numberBetween($min = 1, $max = 3),
+        'created_at' => $faker->dateTimeBetween($startDate = '-30 days', $endDate = 'now')->format('Y-m-d H:i:s')
     ];
 });
