@@ -21,22 +21,21 @@ Vue.use( VueRouter )
     for the app.
 */
 
-import Layout from './views/Layout'
-import Hello from './views/Hello'
-import Home from './views/Home'
+import App from './layouts/App'
 
-import UsersList from './views/components/UsersList';
-import PostsList from './views/components/PostsList';
+import Contact from './views/Contact'
+import Home from './views/Home'
+import UsersList from './views/UsersList';
+import PostsList from './views/PostsList';
 
 export default new VueRouter({
     mode: 'history',
-    components: { Layout },
     routes: [
         {
             path: '/',
             redirect: { name: 'home' },
-            name: 'layout',
-            component: Layout,
+            name: 'app',
+            component: App,
             
             children: [
                 {
@@ -45,9 +44,9 @@ export default new VueRouter({
                     component: Home
                 },
                 {
-                    path: 'hello',
-                    name: 'hello',
-                    component: Hello,
+                    path: 'contact',
+                    name: 'contact',
+                    component: Contact,
                 },
                 ,
                 {
@@ -61,6 +60,10 @@ export default new VueRouter({
                     name: 'users.index',
                     component: UsersList,
                 },
+				/*
+					Catch Alls
+				*/
+				{ path: '_=_', redirect: '/' }
             ],
         }
     ]

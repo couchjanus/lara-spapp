@@ -5,14 +5,8 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
-import VueRouter from 'vue-router'
 import router from './routes.js'
-
-Vue.use(VueRouter)
-
-import App from './views/App'
 
 /**
  * The following block of code may be used to automatically register your
@@ -35,6 +29,5 @@ import App from './views/App'
 
 const app = new Vue({
     el: '#app',
-    components: { App },
     router,
 });
