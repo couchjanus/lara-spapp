@@ -3,7 +3,7 @@
 
 <template>
 <!-- Page Footer-->
-    <footer class="main-footer">
+    <footer class="app-footer">
       <div class="container">
         <div class="row">
           <div class="col-md-4">

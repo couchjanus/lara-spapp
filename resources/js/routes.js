@@ -21,12 +21,15 @@ Vue.use( VueRouter )
     for the app.
 */
 
-import App from './layouts/App'
+import App from './layouts/App';
+import Admin from './layouts/Admin';
 
-import Contact from './views/Contact'
-import Home from './views/Home'
-import UsersList from './views/UsersList';
+import Contact from './views/Contact';
+import Home from './views/Home';
 import PostsList from './views/PostsList';
+
+import Users from './views/admin/Users';
+import Dashboard from './views/admin/Dashboard';
 
 export default new VueRouter({
     mode: 'history',
@@ -48,23 +51,33 @@ export default new VueRouter({
                     name: 'contact',
                     component: Contact,
                 },
-                ,
                 {
                     path: 'posts',
                     name: 'posts.index',
                     component: PostsList,
                 },
-                ,
+				{ path: '_=_', redirect: '/' }
+            ]
+        },
+        {
+            path: '/admin',
+            redirect: { name: 'dashboard' },
+            name: 'admin',
+            component: Admin,
+
+            children: [
+                {
+                    path: 'dashboard',
+                    name: 'dashboard',
+                    component: Dashboard,
+                },
                 {
                     path: 'users',
-                    name: 'users.index',
-                    component: UsersList,
+                    name: 'users',
+                    component: Users,
                 },
-				/*
-					Catch Alls
-				*/
 				{ path: '_=_', redirect: '/' }
-            ],
-        }
+			]
+		},
     ]
 });

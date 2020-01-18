@@ -39,10 +39,10 @@
                   <router-link :to="{ name: 'posts.index' }" class="nav-link ">Blog</router-link>
               </li>
               <li class="nav-item">
-                  <router-link :to="{ name: 'users.index' }" class="nav-link ">Users</router-link>
+                  <router-link :to="{ name: 'contact' }" class="nav-link ">Contact</router-link>
               </li>
               <li class="nav-item">
-                  <router-link :to="{ name: 'contact' }" class="nav-link ">Contact</router-link>
+                  <router-link :to="{ name: 'admin' }" class="nav-link ">Admin</router-link>
               </li>
             </ul>
             <div class="navbar-text">
