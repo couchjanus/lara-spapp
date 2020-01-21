@@ -1,5 +1,5 @@
 import Dashboard from "../views/Admin/Dashboard";
-// import CategoriesIndex from "../views/Admin/Categories/CategoriesIndex";
+import CategoriesIndex from "../views/Admin/Categories/CategoriesIndex";
 // import CategoriesCreate from "../views/Admin/Categories/CategoriesCreate";
 // import PostsIndex from "../views/Admin/Posts/PostsIndex";
 // import PostsCreate from "../views/Admin/Posts/PostsCreate";
@@ -13,14 +13,14 @@ const routes = [
             layout: "admin-layout"
         }
     },
-    // {
-    //     path: "/admin/categories",
-    //     component: CategoriesIndex,
-    //     name: "admin.categories.index",
-    //     meta: {
-    //         layout: "admin-layout"
-    //     }
-    // },
+    {
+        path: "/admin/categories",
+        component: CategoriesIndex,
+        name: "admin.categories.index",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
     // {
     //     path: "/admin/posts",
     //     component: PostsIndex,

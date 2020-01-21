@@ -24,3 +24,5 @@ Route::get('/posts', function () {
 Route::get('/users', function () {
     return factory('App\User', 10)->make();
 });
+
+Route::get('/categories', 'CategoryController@index')->name("api.categories.index");
