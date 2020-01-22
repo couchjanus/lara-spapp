@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Http\Resources\CategoryResource;
+use App\Traits\ApiJsonResponse;
 use Response;
 
 class CategoryController extends Controller
 {
+    use ApiJsonResponse;
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +19,8 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-
+        
         return Response::json($categories);
-        // return CategoryResource::collection($categories);
     }
 
     /**
@@ -41,7 +41,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Category::create($request->all());
+        return response()->json($this->successResponse([$request->all()],'Created successfuly'));
     }
 
     /**
@@ -61,9 +62,11 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($slug)
     {
-        //
+        // return response()->json($this->successResponse([$category],'Created successfuly'));
+        $category = Category::where('slug', $slug)->first();
+        return Response::json($category);
     }
 
     /**
@@ -73,9 +76,14 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request)
     {
-        //
+        dd($request);
+        
+        $cat = Category::where('slug', $request->slug);
+        $cat->name = $request->name;
+        $cat->save();
+        return Response::json([$category]);
     }
 
     /**

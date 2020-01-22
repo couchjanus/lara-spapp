@@ -26,3 +26,8 @@ Route::get('/users', function () {
 });
 
 Route::get('/categories', 'CategoryController@index')->name("api.categories.index");
+Route::get('/categories/{category}', 'CategoryController@edit')->name("api.categories.edit");
+Route::post('/categories', 'CategoryController@store')->name("api.categories.store");
+Route::put('/categories/{category}', 'CategoryController@update')->name("api.categories.update");
+
+// "destroy" => "api.categories.destroy",

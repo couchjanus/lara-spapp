@@ -1,6 +1,7 @@
 import Dashboard from "../views/Admin/Dashboard";
 import CategoriesIndex from "../views/Admin/Categories/CategoriesIndex";
-// import CategoriesCreate from "../views/Admin/Categories/CategoriesCreate";
+import CategoriesCreate from "../views/Admin/Categories/CategoriesCreate";
+import CategoriesEdit from "../views/Admin/Categories/CategoriesEdit";
 // import PostsIndex from "../views/Admin/Posts/PostsIndex";
 // import PostsCreate from "../views/Admin/Posts/PostsCreate";
 
@@ -21,6 +22,22 @@ const routes = [
             layout: "admin-layout"
         }
     },
+    {
+        path: "/admin/categories/create",
+        component: CategoriesCreate,
+        name: "admin.categories.create",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
+    {
+        path: "/admin/categories/:category/edit",
+        component: CategoriesEdit,
+        name: "admin.categories.edit",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
     // {
     //     path: "/admin/posts",
     //     component: PostsIndex,
@@ -37,14 +54,7 @@ const routes = [
     //         layout: "admin-layout"
     //     }
     // },
-    // {
-    //     path: "/admin/categories/create",
-    //     component: CategoriesCreate,
-    //     name: "admin.categories.create",
-    //     meta: {
-    //         layout: "admin-layout"
-    //     }
-    // },
+    
 ];
 
 export default routes;
