@@ -46,6 +46,7 @@
         data() {
             return {
                 categories: null,
+                endpoint: "/api/categories"
             }
         },
         created() {
@@ -58,10 +59,26 @@
             fetchData() {
                 axios.get("/api/categories").then(response => {
                     this.categories = response.data;
-                    // console.log(this.categories);
                 });
+            },
+            deleteCategory(category) {
+                let message = "Are you sure you want to delete it ?";
+                if(! this.confirm(message)) {
+                    return;
+                }
+                let endpoint = this.endpoint +`/${category.slug}`;
+                axios.delete(endpoint)
+                    .then((response) => {
+                        console.log("Categories deleted successfully");
+                        this.fetchData();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            confirm(message) {
+                return confirm(message);
             }
         }
     }
 </script>
-

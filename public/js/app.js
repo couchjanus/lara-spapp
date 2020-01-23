@@ -2043,6 +2043,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CategoriesEdit",
   data: function data() {
@@ -2069,7 +2071,6 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       var _this2 = this;
 
-      console.log(this.category);
       axios.put(this.endpoint, this.category).then(function (response) {
         _this2.$router.push({
           name: "admin.categories.index"
@@ -2140,7 +2141,8 @@ __webpack_require__.r(__webpack_exports__);
   name: "CategoriesIndex",
   data: function data() {
     return {
-      categories: null
+      categories: null,
+      endpoint: "/api/categories"
     };
   },
   created: function created() {
@@ -2154,9 +2156,40 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/categories").then(function (response) {
-        _this.categories = response.data; // console.log(this.categories);
+        _this.categories = response.data;
       });
-    }
+    },
+    deleteCategory: function deleteCategory(category) {
+      var _this2 = this;
+
+      var message = "Are you sure you want to delete it ?";
+
+      if (!this.confirm(message)) {
+        return;
+      }
+
+      var endpoint = this.endpoint + "/".concat(category.slug);
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](endpoint).then(function (response) {
+        console.log("Categories deleted successfully");
+
+        _this2.fetchData();
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    confirm: function (_confirm) {
+      function confirm(_x) {
+        return _confirm.apply(this, arguments);
+      }
+
+      confirm.toString = function () {
+        return _confirm.toString();
+      };
+
+      return confirm;
+    }(function (message) {
+      return confirm(message);
+    })
   }
 });
 
@@ -38686,42 +38719,61 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "my-4" }, [
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "name" } }, [_vm._v("Edit a category")]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.category.name,
-            expression: "category.name"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", id: "name" },
-        domProps: { value: _vm.category.name },
+    _c(
+      "form",
+      {
         on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.category, "name", $event.target.value)
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.update($event)
           }
         }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-lg btn-info", on: { click: _vm.update } },
-        [_vm._v("Update "), _c("i", { staticClass: "fa fa-check" })]
-      )
-    ])
+      },
+      [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "name" } }, [_vm._v("Edit a category")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.category.name,
+                expression: "category.name"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", id: "name" },
+            domProps: { value: _vm.category.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.category, "name", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _vm._m(0)
+      ]
+    )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("button", { staticClass: "btn btn-lg btn-info" }, [
+        _vm._v("Update "),
+        _c("i", { staticClass: "fa fa-check" })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
