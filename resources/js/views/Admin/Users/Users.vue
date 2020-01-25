@@ -48,6 +48,10 @@
                     </tr>
                   </tbody>
                 </table>
+                <vue-pagination  :pagination="users"
+                     @paginate="fetchData()"
+                     :offset="4">
+                </vue-pagination>
               </div>
               <!-- /.card-body -->
             </div>
@@ -63,13 +67,24 @@
 </template>
 <script>
 import axios from "axios";
+import VuePagination from '../../../components/shared/Pagination';
 export default {
   data() {
     return {
       loading: false,
-      users: null,
+      users: {
+            total: 0,
+            per_page: 2,
+            from: 1,
+            to: 0,
+            current_page: 1
+      },
+      offset: 4,
       error: null
     };
+  },
+  components: {
+        VuePagination,
   },
   created() {
     this.fetchData();
@@ -78,12 +93,16 @@ export default {
     fetchData() {
       this.error = this.users = null;
       this.loading = true;
-      axios.get("/api/users").then(response => {
+      axios.get("/api/users?page=${this.users.current_page").then(response => {
         console.log(response);
         this.loading = false;
         this.users = response.data;
+      })
+      .catch(() => {
+        console.log('handle server error from here');
       });
     }
   }
 };
 </script>
+

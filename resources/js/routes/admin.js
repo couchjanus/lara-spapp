@@ -2,6 +2,8 @@ import Dashboard from "../views/Admin/Dashboard";
 import CategoriesIndex from "../views/Admin/Categories/CategoriesIndex";
 import CategoriesCreate from "../views/Admin/Categories/CategoriesCreate";
 import CategoriesEdit from "../views/Admin/Categories/CategoriesEdit";
+
+import UsersIndex from "../views/Admin/Users/UsersIndex";
 // import PostsIndex from "../views/Admin/Posts/PostsIndex";
 // import PostsCreate from "../views/Admin/Posts/PostsCreate";
 
@@ -34,6 +36,14 @@ const routes = [
         path: "/admin/categories/:category/edit",
         component: CategoriesEdit,
         name: "admin.categories.edit",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
+    {
+        path: "/admin/users",
+        component: UsersIndex,
+        name: "admin.users.index",
         meta: {
             layout: "admin-layout"
         }

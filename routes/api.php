@@ -30,3 +30,6 @@ Route::get('/categories/{category}', 'CategoryController@edit')->name("api.categ
 Route::post('/categories', 'CategoryController@store')->name("api.categories.store");
 Route::put('/categories/{category}', 'CategoryController@update')->name("api.categories.update");
 Route::delete('/categories/{category}', 'CategoryController@destroy')->name("api.categories.destroy");
+
+
+Route::get('/allusers', 'UserController@index')->name("api.users.index");
