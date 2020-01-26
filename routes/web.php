@@ -20,3 +20,8 @@
 // Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/{any}', 'SpaController@index')->where('any', '.*');
+
+
+// Route::get('/{any}', function () {
+//     return view('layouts.master');
+// })->where('any','.*');

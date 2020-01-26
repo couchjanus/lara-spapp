@@ -33,3 +33,8 @@ Route::delete('/categories/{category}', 'CategoryController@destroy')->name("api
 
 
 Route::get('/allusers', 'UserController@index')->name("api.users.index");
+
+
+Route::post('/register', 'UserController@register')->middleware('guest');
+Route::post('/login', 'UserController@login')->middleware('guest');
+Route::post('/update/token', 'UserController@updateToken');

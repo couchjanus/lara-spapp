@@ -1,18 +1,30 @@
-//components
-import PostsIndex from "../views/Blog/PostsIndex";
+// public router
+import Home from "../views/Home";
 import NotFound from "../views/NotFound";
-import CategoryIndex from "../views/Blog/CategoryIndex";
+import Register from "../views/Auth/Register";
+import Login from "../views/Auth/Login";
 
 const routes = [
     {
         path: "/",
-        component: PostsIndex,
-        name: "posts.index"
+        component: Home,
+        name: "home.index"
     },
     {
-        path: "/categories/:category",
-        component: CategoryIndex,
-        name: "categories.index"
+        path: '/login',
+        name: 'login',
+        component: Login,
+        meta: {
+            layout: "auth-layout"
+        }
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: Register,
+        meta: {
+            layout: "auth-layout"
+        }
     },
     {
         path: "*",

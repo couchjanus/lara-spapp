@@ -8,11 +8,11 @@
 
 <script>
 //    import BlogLayout from "./views/Layouts/BlogLayout"
-   import AdminLayout from "./views/Layouts/AdminLayout"
-
+    import AdminLayout from "./views/Layouts/AdminLayout"
+    import AuthLayout from "./views/Layouts/AuthLayout"
     export default {
         name: "App",
-        components: { AdminLayout },
+        components: { AdminLayout, AuthLayout },
         data() {
             return {
                 defaultLayout: "admin-layout"
