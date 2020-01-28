@@ -4,8 +4,10 @@ import CategoriesCreate from "../views/Admin/Categories/CategoriesCreate";
 import CategoriesEdit from "../views/Admin/Categories/CategoriesEdit";
 
 import UsersIndex from "../views/Admin/Users/UsersIndex";
-// import PostsIndex from "../views/Admin/Posts/PostsIndex";
-// import PostsCreate from "../views/Admin/Posts/PostsCreate";
+
+import PostsIndex from "../views/Admin/Posts/PostsIndex";
+import PostsCreate from "../views/Admin/Posts/PostsCreate";
+// import PostsEdit from "../views/Admin/Posts/PostsEdit";
 
 const routes = [
     {
@@ -48,18 +50,26 @@ const routes = [
             layout: "admin-layout"
         }
     },
+    {
+        path: "/admin/posts",
+        component: PostsIndex,
+        name: "admin.posts.index",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
+    {
+        path: "/admin/posts/create",
+        component: PostsCreate,
+        name: "admin.posts.create",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
     // {
-    //     path: "/admin/posts",
-    //     component: PostsIndex,
-    //     name: "admin.posts.index",
-    //     meta: {
-    //         layout: "admin-layout"
-    //     }
-    // },
-    // {
-    //     path: "/admin/posts/create",
-    //     component: PostsCreate,
-    //     name: "admin.posts.create",
+    //     path: "/admin/posts/:post/edit",
+    //     component: PostsEdit,
+    //     name: "admin.posts.edit",
     //     meta: {
     //         layout: "admin-layout"
     //     }

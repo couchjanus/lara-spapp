@@ -4,15 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
     protected $fillable = ["title", "content", "slug", "user_id", "category_id", "cover_path", "online"];
 
-    public function getRouteKeyName()
+    public function setNameAttribute($value)
     {
-        return "slug";
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
     }
+
+
 
     /**
      * Relationship between a post with its creator
