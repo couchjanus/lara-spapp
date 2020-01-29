@@ -7,15 +7,15 @@
 </template>
 
 <script>
-//    import BlogLayout from "./views/Layouts/BlogLayout"
+    import BlogLayout from "./views/Layouts/BlogLayout"
     import AdminLayout from "./views/Layouts/AdminLayout"
     import AuthLayout from "./views/Layouts/AuthLayout"
     export default {
         name: "App",
-        components: { AdminLayout, AuthLayout },
+        components: { AdminLayout, AuthLayout, BlogLayout },
         data() {
             return {
-                defaultLayout: "admin-layout"
+                defaultLayout: "blog-layout"
             }
         },
         computed: {

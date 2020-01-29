@@ -35,7 +35,7 @@ Route::delete('/categories/{category}', 'CategoryController@destroy')->name("api
 Route::get('/allusers', 'UserController@index')->name("api.users.index");
 
 Route::get("/posts/all", "PostController@index");
-
+Route::get("/posts", "PostController@index");
 Route::post('/posts', 'PostController@store')->name("api.posts.store");
 
 // Route::resource("posts", "PostController")->names([

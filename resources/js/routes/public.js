@@ -3,12 +3,13 @@ import Home from "../views/Home";
 import NotFound from "../views/NotFound";
 import Register from "../views/Auth/Register";
 import Login from "../views/Auth/Login";
+import PostsIndex from "../views/Blog/PostsIndex";
 
 const routes = [
     {
         path: "/",
-        component: Home,
-        name: "home.index"
+        component: PostsIndex,
+        name: "posts.index"
     },
     {
         path: '/login',
