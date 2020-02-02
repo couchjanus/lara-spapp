@@ -1,13 +1,5 @@
 <template>
     <div class="posts">
-        <div class="loading" v-if="loading">
-            Loading...
-        </div>
-
-        <div v-if="error" class="error">
-            {{ error }}
-        </div>
-
         <!-- Latest Posts -->
         <section class="latest-posts"> 
             <div class="container-fluid">
@@ -26,6 +18,19 @@
                             </div>
                             <a href="#"><h3 class="h4">{{ post.title }}</h3></a>
                             <p class="text-muted">{{ post.description}}</p>
+                            <div class="d-flex justify-content-between">
+                                <router-link
+                                    :to="{
+                                        name: 'posts.show',
+                                        params: {
+                                            category: post.category.slug,
+                                            slug: post.slug
+                                        }
+                                    }"
+                                    class="stretched-link"
+                                >Continue reading</router-link>
+                                <span> {{ post.visits }} views </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -40,7 +45,7 @@
         name: "PostsIndex",
         data() {
             return {
-                posts: null,
+                posts: [],
                 endpoint: "/api/posts",
             }
         },
@@ -51,12 +56,10 @@
         methods: {
             loadPosts(endpoint) {
                 axios.get(endpoint)
-                    .then((response) => {
-                        this.posts = response.data;
-                        console.log(this.posts);
+                    .then(({data : posts}) => {
+                        this.posts = posts.data;
                     })
-                    .catch(error => console.log(error));
-
+                    .catch(error => console.log(error.response));
             },
         },
     }

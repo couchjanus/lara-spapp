@@ -9,6 +9,8 @@ use App\Category;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\PostCollection;
 use Response;
 
 class PostController extends Controller
@@ -20,8 +22,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category')->get();
-        return Response::json($posts);
+        // $posts = Post::with('category')->get();
+        // return Response::json($posts);
+
+        $posts = Post::all();
+        return new PostCollection($posts);
     }
 
     /**
@@ -78,10 +83,17 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(Category $category, Post $post) : PostResource
     {
-        //
+        // if(! auth()->user()) {
+        //     $post->increment("visits");
+        // }
+
+        $post->load(["category", "creator"]);
+
+        return new PostResource($post);
     }
+
 
     /**
      * Show the form for editing the specified resource.

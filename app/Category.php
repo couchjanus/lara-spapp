@@ -16,6 +16,11 @@ class Category extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
+    public function getRouteKeyName()
+    {
+        return "slug";
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);

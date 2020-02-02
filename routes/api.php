@@ -32,6 +32,9 @@ Route::put('/categories/{category}', 'CategoryController@update')->name("api.cat
 Route::delete('/categories/{category}', 'CategoryController@destroy')->name("api.categories.destroy");
 
 
+Route::get("{category}/{post}", "PostController@show")->name("api.posts.show");
+
+
 Route::get('/allusers', 'UserController@index')->name("api.users.index");
 
 Route::get("/posts/all", "PostController@index");

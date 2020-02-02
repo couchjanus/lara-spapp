@@ -16,6 +16,11 @@ class Post extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
+    public function getRouteKeyName()
+    {
+        return "slug";
+    }
+
 
 
     /**
@@ -47,5 +52,11 @@ class Post extends Model
 
         return end($parts);
     }
+
+    public function scopeOnline($query, $condition = true)
+    {
+        return $query->where(["online" => $condition]);
+    }
+
 
 }

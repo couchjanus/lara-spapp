@@ -4,12 +4,18 @@ import NotFound from "../views/NotFound";
 import Register from "../views/Auth/Register";
 import Login from "../views/Auth/Login";
 import PostsIndex from "../views/Blog/PostsIndex";
+import PostShow from "../views/Blog/PostShow";
 
 const routes = [
     {
         path: "/",
         component: PostsIndex,
         name: "posts.index"
+    },
+    {
+        path: "/:category/:slug",
+        component: PostShow,
+        name: "posts.show"
     },
     {
         path: '/login',
