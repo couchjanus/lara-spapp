@@ -38,13 +38,8 @@ Route::get("/posts/all", "PostController@index");
 Route::get("/posts", "PostController@index");
 Route::post('/posts', 'PostController@store')->name("api.posts.store");
 
-// Route::resource("posts", "PostController")->names([
-//     "index" => "api.posts.index",
-//     "store"  => "api.posts.store",
-//     "edit" => "api.posts.edit",
-//     "update" => "api.posts.update",
-//     "destroy" => "api.posts.destroy",
-// ]);
+Route::get("/tags", "TagController@index")->name("api.tags.index");
+Route::post('/tags', 'TagController@store')->name("api.tags.store");
 
 Route::post('/register', 'UserController@register')->middleware('guest');
 Route::post('/login', 'UserController@login')->middleware('guest');

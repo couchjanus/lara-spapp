@@ -7,7 +7,9 @@ import UsersIndex from "../views/Admin/Users/UsersIndex";
 
 import PostsIndex from "../views/Admin/Posts/PostsIndex";
 import PostsCreate from "../views/Admin/Posts/PostsCreate";
-// import PostsEdit from "../views/Admin/Posts/PostsEdit";
+
+import TagsIndex from "../views/Admin/Tags/TagsIndex";
+import TagsEdit from "../views/Admin/Tags/TagsEdit";
 
 const routes = [
     {
@@ -74,7 +76,22 @@ const routes = [
     //         layout: "admin-layout"
     //     }
     // },
-    
+    {
+        path: "/admin/tags",
+        component: TagsIndex,
+        name: "admin.tags.index",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
+    {
+        path: "/admin/tags/:tag/edit",
+        component: TagsEdit,
+        name: "admin.tags.edit",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
 ];
 
 export default routes;

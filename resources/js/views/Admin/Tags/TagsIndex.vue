@@ -1,21 +1,22 @@
 <template>
     <div class="container-fluid">
+        <div class="mt-5 d-flex justify-content-end">
+            <router-link :to="{name: 'admin.tags.create'}" class="btn btn-info mb-2">
+                Add a tag <i class="fa fa-plus-circle"></i>
+            </router-link>
+        </div>
         <table class="table datatable">
             <thead class="thead-info bg-info text-white">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col" class="text-center">Name</th>
-                <th scope="col" class="text-center">Posts</th>
                 <th scope="col" class="text-center">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(tag, index) in tags">
+            <tr v-for="(tag, index) in tags" :key="index">
                 <th scope="row">{{ index + 1}}</th>
                 <td class="text-center">{{ tag.name }}</td>
-                <td class="text-center">
-                    <span class="badge badge-pill badge-info py-1 px-2">{{ tag.posts_count }} {{ pluralize("post", tag.posts_count)}}</span>
-                </td>
                 <td class="text-center">
                     <router-link href="#" class="btn btn-outline-info rounded-circle round"
                      :to="{
@@ -38,16 +39,13 @@
 </template>
 
 <script>
-    import authenticated from "../../../mixins/authenticated";
-    import AuthMiddleware from "../../../mixins/AuthMiddleware";
 
     export default {
         name: "TagsIndex",
-        mixins: [ authenticated, AuthMiddleware ],
         data() {
             return {
                 endpoint: "/api/tags",
-                tags: []
+                tags: null
             }
         },
         mounted() {
@@ -57,8 +55,8 @@
         methods: {
             loadTags() {
                 axios.get(this.endpoint)
-                    .then(({ data : tags}) => this.tags = tags.data)
-                    .catch((error) => this._flashErrors(error))
+                    .then((response) => this.tags = response.data)
+                    .catch((error) => console.log(error))
             },
             deleteTags(tag) {
                 if(confirm("Are you sure to delete this tag ?")) {
@@ -68,20 +66,9 @@
                 let endpoint = this.endpoint + `/${tag.slug}`;
 
                 axios.delete(endpoint)
-                    .then(() => this._removeTag(tag))
-                    .catch(error => this._flashErrors(error))
+                    .then(() => this.loadTags())
+                    .catch(error => console.log(error))
             },
-            _flashErrors(error) {
-                this.$store.dispatch("alert",
-                    {
-                        message:"An error occured during the request",
-                        type:"danger"
-                    }
-                )
-            },
-            _removeTag({ id }) {
-                this.tags = this.tags.filter(tag => tag.id !== id);
-            }
         }
     }
 </script>
