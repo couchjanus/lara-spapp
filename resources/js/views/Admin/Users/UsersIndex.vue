@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <div class="my-2 d-flex justify-content-end">
+        <div class="mt-5 d-flex justify-content-end">
             <router-link :to="{name: 'admin.users.create'}" class="btn btn-info mb-2">
                 Add a User <i class="fa fa-plus-circle"></i>
             </router-link>

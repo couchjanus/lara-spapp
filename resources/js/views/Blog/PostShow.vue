@@ -15,7 +15,7 @@
 
                 </div><!-- /.blog-post -->
             </div>
-           <!-- <Comments :items="post.comments" /> -->
+           <Comments :items="post.comments" />
         </div>
 
     </div>
@@ -24,16 +24,16 @@
 
 <script>
     // import moment from "moment";
-    // import Comments from "../../components/Comments";
+    import Comments from "../../components/Comments";
 
     export default {
         name: "PostShow",
-        // components: {Comments},
+        components: {Comments},
         data() {
             return {
                 post: {
                     creator: "",
-                    // comments: []
+                    comments: []
                 }
             }
         },

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
 use Illuminate\Http\Request;
-use App\Category;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
+use App\Post;
+use App\Category;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\PostCollection;
-use Response;
 
 class PostController extends Controller
 {
@@ -22,10 +22,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = Post::with('category')->get();
-        // return Response::json($posts);
-
         $posts = Post::all();
+        return new PostCollection($posts);
+    }
+
+    public function latest()
+    {
+        $posts = Post::latest()->get();
         return new PostCollection($posts);
     }
 
@@ -89,7 +92,7 @@ class PostController extends Controller
         //     $post->increment("visits");
         // }
 
-        $post->load(["category", "creator"]);
+        $post->load(["category", "creator", "comments"]);
 
         return new PostResource($post);
     }

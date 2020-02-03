@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="my-2 d-flex justify-content-end">
+    <div class="mt-5 d-flex justify-content-end">
       <router-link :to="{name: 'admin.posts.create'}" class="btn btn-info mb-2">
         Add a new post
         <i class="fa fa-plus-circle"></i>
@@ -65,7 +65,7 @@ export default {
   name: "PostsIndex",
   data() {
     return {
-      posts: null,
+      posts: [],
       endpoint: "/api/posts/all"
     };
   },
@@ -77,25 +77,18 @@ export default {
   },
   methods: {
     fetchPosts(endpoint) {
-      axios.get(endpoint).then(( response ) => {
-        this.posts = response.data;
-        console.log(this.posts);
+      axios.get(endpoint).then(( { data : posts } ) => {
+        this.posts = this.posts = posts.data;
       });
     },
     deletePosts(post) {
       const endpoint = `/api/posts/${post.slug}`;
-      if (!confirm("Are you sure to delete this post ?")) {
-        return false;
+      if(! confirm("Are you sure to delete this post ?")) {
+          return false;
       }
-      axios
-        .delete(endpoint)
-        .then((response) => {
-            console.log("Post deleted successfully");
-            this.fetchPosts();
-        })
-        .catch(error => {
-            console.log(error);
-        })
+      axios.delete(endpoint)
+        .then(() => this.$emit("deleted", post))
+        .catch(error => console.log("An error occured with the request"));
     }
   }
 };

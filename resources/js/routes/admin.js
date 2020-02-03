@@ -10,6 +10,7 @@ import PostsCreate from "../views/Admin/Posts/PostsCreate";
 
 import TagsIndex from "../views/Admin/Tags/TagsIndex";
 import TagsEdit from "../views/Admin/Tags/TagsEdit";
+import CommentsIndex from "../views/Admin/Comments/CommentsIndex";
 
 const routes = [
     {
@@ -88,6 +89,14 @@ const routes = [
         path: "/admin/tags/:tag/edit",
         component: TagsEdit,
         name: "admin.tags.edit",
+        meta: {
+            layout: "admin-layout"
+        }
+    },
+    {
+        path: "/admin/comments",
+        component: CommentsIndex,
+        name: "admin.comments.index",
         meta: {
             layout: "admin-layout"
         }

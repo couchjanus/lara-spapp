@@ -58,5 +58,11 @@ class Post extends Model
         return $query->where(["online" => $condition]);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
+
+
 
 }
