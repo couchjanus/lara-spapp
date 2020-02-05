@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import AuthModule from "./modules/auth"
+import CategoriesModule from "./modules/categories"
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ const store = {
     },
     modules: {
         auth: AuthModule,
+        categories: CategoriesModule
     },
     mutations : {
         SHOW_FLASH(state,payload) {

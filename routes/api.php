@@ -17,30 +17,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::resource("categories", "CategoryController")->names([
+    "index" => "api.categories.index",
+    "store"  => "api.categories.store",
+    "show" => "api.categories.show",
+    "update" => "api.categories.update",
+    "destroy" => "api.categories.destroy",
+]);
+Route::get("/categories/{category}/posts", "CategoryController@getPosts")->name("api.categories.posts");
 
 
-Route::get('/allusers', 'UserController@index')->name("api.users.index");
+// Route::get('/allusers', 'UserController@index')->name("api.users.index");
+// Route::get("/posts", "PostController@index");
+// Route::get("/posts/all", "PostController@latest");
+// Route::post('/posts', 'PostController@store')->name("api.posts.store");
+// Route::get("{category}/{post}", "PostController@show")->name("api.posts.show");
 
-Route::get("/posts", "PostController@index");
-Route::get("/posts/all", "PostController@latest");
-
-Route::post('/posts', 'PostController@store')->name("api.posts.store");
-
-Route::get('/categories', 'CategoryController@index')->name("api.categories.index");
-Route::get('/categories/{category}', 'CategoryController@edit')->name("api.categories.edit");
-Route::post('/categories', 'CategoryController@store')->name("api.categories.store");
-Route::put('/categories/{category}', 'CategoryController@update')->name("api.categories.update");
-Route::delete('/categories/{category}', 'CategoryController@destroy')->name("api.categories.destroy");
-
-Route::get("{category}/{post}", "PostController@show")->name("api.posts.show");
-
-Route::get("/tags", "TagController@index")->name("api.tags.index");
-Route::post('/tags', 'TagController@store')->name("api.tags.store");
-
-Route::post('/register', 'UserController@register')->middleware('guest');
-Route::post('/login', 'UserController@login')->middleware('guest');
-Route::post('/update/token', 'UserController@updateToken');
-
+// Route::get("/tags", "TagController@index")->name("api.tags.index");
+// Route::post('/tags', 'TagController@store')->name("api.tags.store");
 
 Route::get("/comments", "CommentController@index")->name("api.comments.index");
 Route::post("{category}/{post}/comments", "CommentController@store")->name("api.comments.store");
@@ -50,4 +44,22 @@ Route::delete("comments/{comment}", "CommentController@destroy")->name("api.comm
 Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('login', 'AuthController@login')->name("auth.login");
     Route::post('logout', 'AuthController@logout')->name("auth.logout");
+});
+
+
+// Route::post('login', 'ApiController@login');
+// Route::post('register', 'ApiController@register');
+
+Route::post('/register', 'UserController@register')->middleware('guest');
+Route::post('/login', 'UserController@login')->middleware('guest');
+Route::post('/update/token', 'UserController@updateToken');
+
+Route::group(['middleware' => 'auth.jwt'], function () {
+    // Route::get('logout', 'ApiController@logout');
+
+    // Route::get('tasks', 'TaskController@index');
+    // Route::get('tasks/{id}', 'TaskController@show');
+    // Route::post('tasks', 'TaskController@store');
+    // Route::put('tasks/{id}', 'TaskController@update');
+    // Route::delete('tasks/{id}', 'TaskController@destroy');
 });

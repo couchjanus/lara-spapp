@@ -5,12 +5,24 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Traits\ApiJsonResponse;
-use Response;
+
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PostCollection;
+
+// use JWTAuth;
 
 class CategoryController extends Controller
 {
-    use ApiJsonResponse;
+
+    /**
+     * TaskController constructor.
+     */
+    public function __construct()
+    {
+        // $this->user = JWTAuth::parseToken()->authenticate();
+        // $this->middleware("api")->only(["store", "update", "destroy"]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,20 +31,10 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        
-        return Response::json($categories);
+        return CategoryResource::collection($categories);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -41,8 +43,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        Category::create($request->all());
-        return response()->json($this->successResponse([$request->all()],'Created successfuly'));
+        $request->validate([ "names" => "required" ]);
+        $categoriesNames = explode(",", $request->get("names"));
+        $categoriesSaved = Category::register($categoriesNames);
+
+        return CategoryResource::collection($categoriesSaved);
     }
 
     /**
@@ -53,22 +58,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return new CategoryResource($category);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($slug)
-    {
-        // return response()->json($this->successResponse([$category],'Created successfuly'));
-        $category = Category::where('slug', $slug)->first();
-        return Response::json($category);
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -76,13 +68,20 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $slug)
+    public function update(Request $request, Category $category)
     {
-        // dump($slug);
-        $category = Category::where('slug', $slug)->first();
-        // dump($category);
-        $category->update($request->all());
-        return response()->json($this->successResponse([$request->all()],'updated successfuly'));
+        $request->validate([ "name" => "required|max:255"]);
+
+        if($request->name !== $category->name) {
+            $request->validate(["name" => "unique:categories"]);
+        }
+
+        $category->update([
+            "name" => $request->name,
+            "slug" => Str::slug($request->name)
+        ]);
+
+        return new CategoryResource($category);
     }
     
     /**
@@ -96,5 +95,11 @@ class CategoryController extends Controller
         $category = Category::where('slug', $slug)->first();
         $category->delete();
         return response()->json($this->successResponse([], 204));
+    }
+
+    public function getPosts(Category $category)
+    {
+        $posts = $category->posts()->latest()->get();
+        return new PostCollection($posts);
     }
 }

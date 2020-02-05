@@ -1,27 +1,24 @@
 <template>
     <div class="my-4">
+        <label for="category">Edit a category</label>
+        <input type="text" class="form-control" v-model="categories" id="category" name="category">
+        <span class="text-danger d-block mb-2" v-if="errors.has('category')">{{ errors.get('category')}}</span>
         <div class="form-group">
-            <label>Name:</label>
-            <div class="tag--wrapper" id="taginput--wrapper">
-                <input type="text" class="form-control" v-model="category">
-            </div>
             <button class="btn btn-lg btn-info" @click="create">Create <i class="fa fa-check"></i></button>
         </div>
-        <strong>Output:</strong>
-            <pre>
-            {{output}}
-            </pre>
     </div>
 </template>
 
 <script>
+    import Errors from "../../../components/shared/Errors";
+    
     export default {
         name: "CategoriesCreate",
         data() {
             return {
-                category: "",
+                categories: "",
                 endpoint: "/api/categories",
-                output: ''
+                errors: new Errors()
             }
         },
         created() {
@@ -29,16 +26,18 @@
         },
         methods: {
             create() {
-                let currentObj = this;
-                axios.post(this.endpoint, { name: this.category })
-                    .then((response) => {
-                        currentObj.output = response.data;
+                axios.post(this.endpoint, { names: this.categories })
+                    .then(({ data : categories}) => {
+                        return this.$store.dispatch("storeCategories", categories.data)
+                    })
+                    .then(() => {
+                        this.$store.dispatch("alert", { message:  "Categories stored successfully"});
                         this.$router.push({
                             "name" : "admin.categories.index"
                         })
                     }).
                     catch(error => {
-                        currentObj.output = error;
+                        this.errors.record(error.response.data.errors)
                     })
             }
         }
@@ -46,38 +45,5 @@
 </script>
 
 <style lang="scss">
-    .tag--wrapper {
-        border: 1px solid darkcyan;
-        border-radius: 2px;
-        display: flex;
-        flex-wrap: wrap;
-        .input--tag {
-            border: none;
-            width: 40% !important;
-            outline: none !important;
-            transition: none !important;
-            box-shadow: none !important;
-            &:focus {
-                border: none !important;
-                box-shadow: none !important;
-            }
-        }
-    }
-    .tag__list {
-        margin-bottom: 0px !important;
-        padding-left: 0.2rem;
-    }
-    .tag__badge {
-        padding: 8px;
-        font-size: 10.5px;
-        &--name {
-            margin-right: 3px;
-            cursor: pointer;
-        }
-        &--remove {
-            border-left: 1px solid #e1e1e199;
-            padding-left: 5px;
-            cursor: pointer;
-        }
-    }
+    
 </style>
