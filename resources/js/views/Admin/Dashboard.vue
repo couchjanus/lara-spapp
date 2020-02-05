@@ -87,8 +87,11 @@
 </template>
 
 <script>
+    import AuthMiddleware from "../../components/shared/AuthMiddleware";
+    import authenticated from "../../components/shared/authenticated";
     export default {
         name: "Dashboard",
+        mixins: [ AuthMiddleware, authenticated ],
         data() {
             return {
                 data: {}

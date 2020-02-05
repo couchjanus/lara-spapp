@@ -10,9 +10,11 @@
     import BlogLayout from "./views/Layouts/BlogLayout"
     import AdminLayout from "./views/Layouts/AdminLayout"
     import AuthLayout from "./views/Layouts/AuthLayout"
+    import LoginLayout from "./views/Layouts/LoginLayout"
+
     export default {
         name: "App",
-        components: { AdminLayout, AuthLayout, BlogLayout },
+        components: { AdminLayout, AuthLayout, BlogLayout, LoginLayout },
         data() {
             return {
                 defaultLayout: "blog-layout"

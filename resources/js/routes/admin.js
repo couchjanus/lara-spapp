@@ -11,6 +11,7 @@ import PostsCreate from "../views/Admin/Posts/PostsCreate";
 import TagsIndex from "../views/Admin/Tags/TagsIndex";
 import TagsEdit from "../views/Admin/Tags/TagsEdit";
 import CommentsIndex from "../views/Admin/Comments/CommentsIndex";
+import Login from "../views/Admin/Login";
 
 const routes = [
     {
@@ -99,6 +100,14 @@ const routes = [
         name: "admin.comments.index",
         meta: {
             layout: "admin-layout"
+        }
+    },
+    {
+        path: "/admin/login",
+        component: Login,
+        name: "login",
+        meta: {
+            layout: "login-layout"
         }
     },
 ];

@@ -45,3 +45,9 @@ Route::post('/update/token', 'UserController@updateToken');
 Route::get("/comments", "CommentController@index")->name("api.comments.index");
 Route::post("{category}/{post}/comments", "CommentController@store")->name("api.comments.store");
 Route::delete("comments/{comment}", "CommentController@destroy")->name("api.comments.destroy");
+
+
+Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
+    Route::post('login', 'AuthController@login')->name("auth.login");
+    Route::post('logout', 'AuthController@logout')->name("auth.logout");
+});
