@@ -6,16 +6,25 @@
                 <router-link to="/" class="nav-link text-white" >Home</router-link>
             </li>
             <li class="nav-item text-nowrap">
-                <a class="nav-link text-white" href="#">Sign out</a>
+                <a class="nav-link text-white" href="#" @click.prevent="logOut">Sign out</a>
             </li>
         </ul>
     </nav>
 </template>
 
 <script>
+    import authenticated from "../../../../components/shared/authenticated";
 
     export default {
         name: "Navbar.vue",
+        mixins: [ authenticated ],
+        methods: {
+            logOut() {
+                this.auth.logOut();
+                this.$router.push("/");
+                this.$store.dispatch("alert", { message: "You are logged out successfully"})
+            }
+        }
     }
 </script>
 

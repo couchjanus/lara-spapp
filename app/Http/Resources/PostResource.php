@@ -25,9 +25,9 @@ class PostResource extends JsonResource
             "online" => !! $this->online,
             "creator" => $this->creator,
             "cover_path" => $this->cover_path,
-            "visits" => $this->visits,
+            "visits_count" => $this->visits,
             "comments" => CommentRessource::collection($this->whenLoaded("comments")),
-            // "tags" => TagResource::collection($this->tags()->get())
+            "tags" => TagResource::collection($this->tags()->get())
         ];
     }
 }

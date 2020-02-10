@@ -2,75 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\PostsFilter;
+use App\Http\Requests\PostRequest;
+use App\Http\Resources\PostCollection;
+use App\Http\Resources\PostResource;
+use App\Category;
+use App\Post;
+use App\Tag;
 use Illuminate\Http\Request;
-
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-use App\Post;
-use App\Category;
-use App\Http\Resources\PostResource;
-use App\Http\Resources\PostCollection;
-
 class PostController extends Controller
 {
+    protected $filter;
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * PostsController constructor.
+     * @param PostsFilter $filter
+     */
+    public function __construct(PostsFilter $filter)
+    {
+        $this->filter = $filter;
+    }
+
+    /**
+     * Fetch filtered posts that have an online status
+     * @return PostCollection
      */
     public function index()
     {
-        $posts = Post::all();
-        return new PostCollection($posts);
-    }
-
-    public function latest()
-    {
-        $posts = Post::latest()->get();
+        $filteredPosts  = $this->filter->apply(
+            request()->all(),
+            Post::online()->latest()
+        );
+        $posts = $filteredPosts->paginate(7);
         return new PostCollection($posts);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Fetch all posts (online or not)
      */
-    public function create()
+    public function all()
     {
-        //
+        return new PostCollection(Post::latest()->get());
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PostRequest $request
+     * @return PostResource
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        dump("Image: ", $request->file);
-
-        $title = $request->get('title');
-        $content = $request->get('content');
-        $category_id = $request->get('category_id');
-        $online = $request->get('online');
-        $cover_path = $this->uploadCover($request->file("cover"));
-        $visits = 0;
-        // 'slug'] = Str::slug($value);
-            
-        Post::create([
-            "title" => $title,
-            'slug' => Str::slug($title),
-            "content" => $content,
-            "user_id" => 1,
-            "category_id" => $category_id,
-            "cover_path" => $cover_path,
-            "online" => $online,
-            "visits" => $visits,
-        ]);
-        return response()->json(true);
+        $data = $request->data();
+        $data["cover_path"] = $this->uploadCover($request->file("cover"));
+        $data["visits"] = 0;
+        $post = Post::create($data);
+        $tagsId = Tag::add(explode(",", $request->tags));
+        $post->tags()->attach($tagsId);
+        return new PostResource($post);
     }
 
     private function uploadCover(UploadedFile $file) : string
@@ -81,51 +72,44 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param Category $category
+     * @param Post $post
+     * @return PostResource
      *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
      */
     public function show(Category $category, Post $post) : PostResource
     {
-        // if(! auth()->user()) {
-        //     $post->increment("visits");
-        // }
-
+        if(! auth()->user()) {
+            $post->increment("visits");
+        }
         $post->load(["category", "creator", "comments"]);
-
         return new PostResource($post);
     }
 
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param PostRequest $request
+     * @param Post $post
+     * @return PostResource
      */
-    public function edit(Post $post)
+    public function update(PostRequest $request, Post $post) : PostResource
     {
-        //
+        $data = $request->data();
+        if($request->file("cover")) {
+            Storage::delete("public/covers/" . $post->cover);
+            $data["cover_path"] = $this->uploadCover($request->file("cover"));
+        }
+
+        $post->update($data);
+        $tagsId = Tag::add(explode(",", $request->tags));
+        $post->tags()->sync($tagsId);
+        return new PostResource($post);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy(Post $post)
     {

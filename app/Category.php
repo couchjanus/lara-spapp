@@ -3,18 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
     protected $fillable = ["name", "slug"];
-
-    // public function setNameAttribute($value)
-    // {
-    //     $this->attributes['name'] = $value;
-    //     $this->attributes['slug'] = Str::slug($value);
-    // }
 
     public function getRouteKeyName()
     {
@@ -46,7 +40,6 @@ class Category extends Model
     public static function getCategoriesToRegister(array $names) : array
     {
         $existingCategoriesNames = static::whereIn("name", $names)->pluck("name");
-
         return array_filter($names, function ($name) use ($existingCategoriesNames) {
            return ! $existingCategoriesNames->contains($name);
         });

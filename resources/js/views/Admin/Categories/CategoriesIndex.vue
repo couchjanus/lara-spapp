@@ -5,18 +5,20 @@
                 Add a category <i class="fa fa-plus-circle"></i>
             </router-link>
         </div>
-
-        
         <categories :categories="categories"></categories>
     </div>
 </template>
 
 <script>
+    
     import Categories from "../../../components/Categories";
+    import AuthMiddleware from "../../../components/shared/AuthMiddleware";
+    import authenticated from "../../../components/shared/authenticated";
 
     export default {
         name: "CategoriesIndex",
         components: {Categories},
+        mixins: [ authenticated, AuthMiddleware ],
         data() {
             return {
                 endpoint: "/api/categories"

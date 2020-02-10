@@ -9,7 +9,7 @@
                 <label for="category">Category</label>
                 <select class="custom-select" id="category" v-model="form.category_id" @change="errors.clear('category_id')">
                     <option selected="" disabled></option>
-                    <option :value="category.id" v-for="category in categories"
+                    <option :value="category.id" v-for="(category, index) in categories" :key="index"
                         :selected="category.id === form.category_id"
                     >{{ category.name }}</option>
                 </select>
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label for="content">Content</label>
-                <markdown-editor v-model="form.content" id="content" @keydown="errors.clear('content')"></markdown-editor>
+                <textarea v-model="form.content" id="content" @keydown="errors.clear('content')"></textarea>
                 <small class="post-text text-danger" v-if="errors.has('content')">{{ errors.get('content') }}</small>
             </div>
             <div class="form-group">
@@ -46,16 +46,15 @@
 
 <script>
     import CoverUploader from "../../../components/CoverUploader";
-    import MarkdownEditor from 'vue-simplemde/src/markdown-editor';
-    import AddToken from "../../../mixins/AddToken";
-    import AuthMiddleware from "../../../mixins/AuthMiddleware";
-    import authenticated from "../../../mixins/authenticated";
-    import Errors from "../../../Utilities/Errors";
-    import InputTag from "../../../Utilities/InputTag";
-
+    import Errors from "../../../components/shared/Errors";
+    import AddToken from "../../../components/shared/AddToken";
+    import AuthMiddleware from "../../../components/shared/AuthMiddleware";
+    import authenticated from "../../../components/shared/authenticated";
+    import InputTag from "../../../components/admin/InputTag";
+    
     export default {
         name: "PostEdit",
-        components: {CoverUploader, MarkdownEditor, InputTag},
+        components: {CoverUploader,  InputTag},
         mixins: [AuthMiddleware, authenticated, AddToken],
         data() {
             return {
@@ -162,3 +161,4 @@
 <style scoped>
 
 </style>
+

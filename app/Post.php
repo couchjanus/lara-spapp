@@ -4,17 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-use Illuminate\Support\Str;
 
 class Post extends Model
 {
     protected $fillable = ["title", "content", "slug", "user_id", "category_id", "cover_path", "online"];
-
-    public function setNameAttribute($value)
-    {
-        $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
-    }
 
     public function getRouteKeyName()
     {
@@ -23,7 +16,7 @@ class Post extends Model
 
 
 
-    /**
+/**
      * Relationship between a post with its creator
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -41,9 +34,32 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * Relationship post with tags
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     *  Relationship between a post with comments
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
+
     public function getDescriptionAttribute()
     {
         return substr($this->content, 0, 70) . "...";
+    }
+
+    public function scopeSearch($query, $value)
+    {
+        return $query->where("title", "LIKE", "%$value%");
     }
 
     public function getCoverAttribute()
@@ -57,12 +73,5 @@ class Post extends Model
     {
         return $query->where(["online" => $condition]);
     }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class)->latest();
-    }
-
-
 
 }

@@ -2,89 +2,88 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostCollection;
+use App\Http\Resources\TagResource;
 use App\Tag;
 use Illuminate\Http\Request;
-use App\Traits\ApiJsonResponse;
+use Illuminate\Support\Str;
 
 class TagController extends Controller
 {
-    use ApiJsonResponse;
+    public function __construct()
+    {
+        $this->middleware('api')->only(["update", "destroy"]);
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $tags = Tag::all();
-        return response()->json($tags, 200);
+        return TagResource::collection(
+            Tag::withCount("posts")->get()
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Display the tag resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        Tag::create($request->all());
-        return response()->json($this->successResponse([$request->all()],'Created successfuly'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @param Tag $tag
+     * @return TagResource
      */
     public function show(Tag $tag)
     {
-        //
+        return new TagResource($tag);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the tag resource.
      *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @param Tag $tag
+     * @return TagResource
      */
     public function update(Request $request, Tag $tag)
     {
-        //
+        $request->validate(["name" => "required"]);
+        if($request->name !== $tag->name) {
+            $request->validate(["name" => "unique:tags"]);
+        }
+
+        $tag->update([
+            "name" => $request->name,
+            "title" => Str::slug($request->name)
+        ]);
+
+        return new TagResource($tag);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a tag resource.
      *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @param Tag $tag
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy(Tag $tag)
     {
         $tag->delete();
+
         return response()->json([], 204);
+    }
+
+
+    /**
+     * @param Tag $tag
+     * @return PostCollection
+     */
+    public function getPosts(Tag $tag)
+    {
+        $posts = $tag->posts()->online()->paginate(10);
+
+        return new PostCollection($posts);
     }
 }

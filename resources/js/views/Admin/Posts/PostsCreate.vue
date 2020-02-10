@@ -1,32 +1,37 @@
 <template>
     <div class="container-fluid">
-        <form action="" @submit.prevent="storePost" enctype="multipart/form-data" method="POST">
+        <form action="" @submit.prevent="post">
             <div class="card mb-3">
                 <cover-uploader @loaded="updateCover"></cover-uploader>
+                <small class="form-text text-danger" v-if="errors.has('cover')">{{ errors.get('cover') }}</small>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
-                <select class="custom-select" id="category" v-model="category_id">
+                <select class="custom-select" id="category" v-model="form.category_id" @change="errors.clear('category_id')">
                     <option selected="" disabled></option>
-                    <option :value="category.id" v-for="(category, i) in categories" :key="i">{{ category.name }}</option>
+                    <option :value="category.id" v-for="(category, index) in categories" :key="index">{{ category.name }}</option>
                 </select>
+                <small class="form-text text-danger" v-if="errors.has('category_id')">{{ errors.get('category_id') }}</small>
             </div>
             <div class="form-group">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="online" checked="" v-model="online">
+                    <input type="checkbox" class="custom-control-input" id="online" checked="" v-model="form.online">
                     <label class="custom-control-label" for="online">Online</label>
                 </div>
             </div>
-            
+            <div class="form-group">
+                <input-tag name="Tags" v-model="form.tags"></input-tag>
+                <small class="form-text text-danger" v-if="errors.has('tags')">{{ errors.get('tags') }}</small>
+            </div>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" v-model="title">
-                
+                <input type="text" class="form-control" id="title" v-model="form.title" @keydown="errors.clear('title')">
+                <small class="form-text text-danger" v-if="errors.has('title')">{{ errors.get('title') }}</small>
             </div>
             <div class="form-group">
                 <label for="content">Content</label>
-                <textarea v-model="content" id="content"></textarea>
-
+                <textarea v-model="form.content" id="content" @keydown="errors.clear('content')"></textarea>
+                <small class="form-text text-danger" v-if="errors.has('content')">{{ errors.get('content') }}</small>
             </div>
             <div class="form-group">
                 <button class="btn btn-success btn-lg" type="submit">Post <i class="fa fa-check"></i></button>
@@ -37,78 +42,88 @@
 
 <script>
     import CoverUploader from "../../../components/CoverUploader";
+    import AuthMiddleware from "../../../components/shared/AuthMiddleware";
+    import authenticated from "../../../components/shared/authenticated";
+    import Errors from "../../../components/shared/Errors";
+    import InputTag from "../../../components/admin/InputTag";
+    import AddToken from "../../../components/shared/AddToken";
     
     export default {
-        components: {CoverUploader },
+        components: {CoverUploader, InputTag },
+        mixins: [AuthMiddleware, authenticated, AddToken],
         
         data() {
             return {
-                cover: null,
-                category_id: "",
-                title: "",
-                content: "",
-                online: false,
+                form: {
+                    cover: "",
+                    category_id: "",
+                    title: "",
+                    content: "",
+                    online: false,
+                    tags: ""
+                },
                 endpoint: "/api/posts",
-                categories: null,
+                errors: new Errors()
             }
-        },
-        created() {
-            this.fetchCategories();
-        },
-        mounted() {
-            document.title = "New Post | SPA Blog"
         },
         methods: {
             updateCover(cover) {
-                this.cover = cover;
+                if(this.errors.has('cover')) {
+                    this.errors.clear('cover');
+                }
+                this.form.cover = cover;
             },
-            storePost() {
+            post() {
                 const config = {
                     headers: {
                         "content-type": "multipart/form-data"
                     }
                 };
-                // let formData = {
-                //     cover: this.cover,
-                //     title: this.title,
-                //     content: this.content,
-                //     category_id: this.category_id,
-                //     online: this.online,
-                // };
 
                 let formData = new FormData();
 
-                formData.append("cover", this.cover);
-                formData.append("title", this.title);
-                formData.append("content", this.content);
-                formData.append("category_id", this.category_id);
-                formData.append("online", this.online);
+                formData.append("cover", this.form.cover);
+                formData.append("title", this.form.title);
+                formData.append("content", this.form.content);
+                formData.append("category_id", this.form.category_id);
+                formData.append("online", this.form.online);
+                formData.append("tags", this.form.tags)
 
-                console.log(formData);
+                this.store(formData, config);
+            },
+            store(data, config) {
 
-                axios.post(this.endpoint, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-                })
-                .then(response => {
-                    if (response.data) {
-                        console.log(response.data);
+                axios.post(this.endpoint, data, config)
+                    .then(({ data : post}) => {
+
+                        return this.$store.dispatch("addCategoryPostCount", post.data.category);
+                    })
+                    .then(() => {
+                        this.$store.dispatch("alert", {
+                            message: "Your post has been saved successfully"
+                        });
                         this.$router.push({
                             name: "admin.posts.index"
                         });
-                    }
-                }).catch(error => {
-                    alert(error.response.data.message);
-                })
-            },
-            fetchCategories() {
-                axios.get("/api/categories").then(response => {
-                    
-                    this.categories = response.data;
-                });
-            },
+                    })
+                    .catch(error => {
+                        if(error.response.data.errors) {
+                            this.errors.record(error.response.data.errors)
+                        } else {
+                            this.$store.dispatch("alert", {
+                                message: "An error occured during request",
+                                type: "danger"
+                            })
+                        }
+
+                    })
+            }
         },
+        computed: {
+            categories() {
+                return this.$store.getters.categories;
+            }
+        }
         
     }
 </script>
